@@ -3,15 +3,71 @@
 	  <h1>Hello!</h1>
 	  <p>This site demonstrates a function that removes all duplicates from an unsorted list of email addresses while leaving the remaining list in the original order. It should be able to handle say, 100,000 email addresses containing 50% randomly placed duplicates in well under 1 second on a typical modern laptop.</p>
 	  
+	  	<input id="input" type="file" accept=".csv">
+	  	<button class="btn" id="run_button">Run</button>
+	  	
+	  	<script>
+			$('#run_button').click(function()
+			{
+				var file = document.getElementById("input").files[0];
+				var reader = new FileReader();
+				content = reader.readAsText(file);
+				reader.onload=loadHandler;
+				reader.onerror = errorHandler;
+			});
 
-	  	<input id="file" type="file">
-	
+			function loadHandler(event)
+			{
+				var csv = event.target.result;
+				processData(csv);
+			}
 
-	  <!-- <form action="upload" method="post">
-	  	<input type="file" name="uploaded_file">
-	  	<input type="submit" class="btn btn-primary btn-lg" value="Upload File">
-	  </form> -->
+			function processData(csv) 
+			{
+				var allItems = csv.split(/\r\n|\n/);
+        		var working_list = [];
+        		for (var i=0; i < allItems.length; i++) {
+	            	var data = allItems[i].split(';');
+                	working_list.push(data);
+        		}
 
-	  <!-- <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p> -->
+        		//no dupe algorithm
+        		var num = working_list.length;
+				var no_dupes = {};
+				var existing_count = 0;
+				
+				for (var i = 0; i < num; i++)
+				{
+				  	//check to see if the item is in the list
+				    if (!no_dupes[working_list[i]])
+				    {
+				      	//add item list if it's not there and set value to true
+				        no_dupes[working_list[i]] = true;
+				        //add item to end of working list
+				        working_list.push(working_list[i]);
+				    }
+				    else
+				    {
+				    	//increase counter if duplicate is found
+				      	existing_count++;
+				    }
+				}
+				//remove original items from array so it will only contain no_dupes
+				working_list.splice(0, num);
+
+				//put number of duplicates to HTML
+				$('#email_list').text(existing_count + " duplicate(s) found");
+	      		console.log("after algorithm" + working_list);
+	      	}
+
+	      	function errorHandler(evt) {
+		      if(evt.target.error.name == "NotReadableError") {
+		          alert("Cannot read file!");
+		      }
+	  		};
+		</script>
+
+
+	<div id="email_list"></div>
 	</div>
 </div>
