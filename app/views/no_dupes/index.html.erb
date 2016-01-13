@@ -1,19 +1,18 @@
 <div class="col-md-8">
 	<div class="jumbotron">
 	  <h1>Hello!</h1>
-	  <p>This site demonstrates a function that removes all duplicates from an unsorted list of email addresses while leaving the remaining list in the original order. It should be able to handle say, 100,000 email addresses containing 50% randomly placed duplicates in well under 1 second on a typical modern laptop.</p>
+	  <p>This site demonstrates a function that removes all duplicates from an unsorted list while leaving the remaining list in the original order. It should be able to handle say, 100,000 list items containing 50% randomly placed duplicates in well under 1 second on a typical modern laptop. This site only accepts .csv files at this time.</p>
 	  
 	  	<input id="input" type="file" accept=".csv">
-	  	<button class="btn" id="run_button">Run</button>
+	  	<button class="btn btn-default" id="run_button">Run</button>
 	  	
 	  	<script>
 			$('#run_button').click(function()
 			{
 				var file = document.getElementById("input").files[0];
 				var reader = new FileReader();
-				content = reader.readAsText(file);
-				reader.onload=loadHandler;
-				reader.onerror = errorHandler;
+				reader.readAsText(file);
+				reader.onload = loadHandler;
 			});
 
 			function loadHandler(event)
@@ -24,6 +23,25 @@
 
 			function processData(csv) 
 			{
+				//save array created from csv items
+				var working_list = createArrFromCSV(csv);
+				//get start time for no dupe algorithm
+				var start_time = Date.now();
+        		//receive algorithm results and count of duplicates as array
+        		var result = removeDuplicatesFromArray(working_list);
+        		//get end time for no dupe algorithm
+				var end_time = Date.now();
+        		working_list = result[0];
+        		var removed_count = result[1];
+
+				saveResultsToCSV(working_list);
+
+				putResultToHTML(removed_count, (end_time - start_time));
+				 
+	      	}
+
+			function createArrFromCSV(csv)
+			{
 				var allItems = csv.split(/\r\n|\n/);
         		var working_list = [];
         		for (var i=0; i < allItems.length; i++) {
@@ -31,63 +49,65 @@
                 	working_list.push(data);
         		}
 
-        		//no dupe algorithm
-        		var num = working_list.length;
+        		return working_list;
+			}
+
+			function removeDuplicatesFromArray(arr)
+			{
+
+				//no dupe algorithm
+        		var num = arr.length;
 				var no_dupes = {};
-				var existing_count = 0;
-				
+				var duplicate_count = 0;
+
 				for (var i = 0; i < num; i++)
 				{
 				  	//check to see if the item is in the list
-				    if (!no_dupes[working_list[i]])
+				    if (!no_dupes[arr[i]])
 				    {
 				      	//add item list if it's not there and set value to true
-				        no_dupes[working_list[i]] = true;
+				        no_dupes[arr[i]] = true;
 				        //add item to end of working list
-				        working_list.push(working_list[i]);
+				        arr.push(arr[i]);
 				    }
 				    else
 				    {
 				    	//increase counter if duplicate is found
-				      	existing_count++;
+				      	duplicate_count++;
 				    }
 				}
 				//remove original items from array so it will only contain no_dupes
-				working_list.splice(0, num);
+				arr.splice(0, num);
+				return [arr, duplicate_count];
+			}
 
-				//put number of duplicates to HTML
-				$('#email_list').text(existing_count + " duplicate(s) found");
-	      		console.log("after algorithm" + working_list);
 
-	      		//creating csv from new working_list
+			function saveResultsToCSV(arr)
+			{
+				//creating csv from array
 				var csvContent = "data:text/csv;charset=utf-8,";
-		  		working_list.forEach(function(item, index){
-				   // dataString = item.join(",");
-				   // csvContent += index < working_list.length ? dataString+ "\n" : dataString;
+
+		  		arr.forEach(function(item, index)
+		  		{
 				   csvContent += (item + "\n");
-				   console.log(csvContent);
 				}); 
 
 		  		var encodedUri = encodeURI(csvContent);
 				var link = document.createElement("a");
 				link.setAttribute("href", encodedUri);
 				link.setAttribute("download", "no_dupes.csv");
+				//automatically download "no_dupes.csv"
+				link.click();
+			}
 
-				link.click(); // This will download the data file named "my_data.csv".
-
-	      	}
-
-	      	function errorHandler(evt) {
-		      if(evt.target.error.name == "NotReadableError") {
-		          alert("Cannot read file!");
-		      }
-	  		};
-
-
-
+			function putResultToHTML(removed_count, duration)
+			{
+				//put process time and number of duplicates to HTML
+				$('#result').text(removed_count + " duplicate(s) found. The process took " +  duration + " milliseconds");
+			}
 		</script>
 
 
-	<div id="email_list"></div>
+		<div id="result"></div>
 	</div>
 </div>
