@@ -58,6 +58,23 @@
 				//put number of duplicates to HTML
 				$('#email_list').text(existing_count + " duplicate(s) found");
 	      		console.log("after algorithm" + working_list);
+
+	      		//creating csv from new working_list
+				var csvContent = "data:text/csv;charset=utf-8,";
+		  		working_list.forEach(function(item, index){
+				   // dataString = item.join(",");
+				   // csvContent += index < working_list.length ? dataString+ "\n" : dataString;
+				   csvContent += (item + "\n");
+				   console.log(csvContent);
+				}); 
+
+		  		var encodedUri = encodeURI(csvContent);
+				var link = document.createElement("a");
+				link.setAttribute("href", encodedUri);
+				link.setAttribute("download", "no_dupes.csv");
+
+				link.click(); // This will download the data file named "my_data.csv".
+
 	      	}
 
 	      	function errorHandler(evt) {
@@ -65,6 +82,9 @@
 		          alert("Cannot read file!");
 		      }
 	  		};
+
+
+
 		</script>
 
 
