@@ -4,6 +4,5 @@ class NoDupesController < ApplicationController
 
  	def download
 		send_file "#{Rails.root}/app/assets/files/duplicates.csv"
-		# redirect_to '/'
 	end
 end
