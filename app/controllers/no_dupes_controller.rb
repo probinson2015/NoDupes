@@ -1,11 +1,9 @@
 class NoDupesController < ApplicationController
-  def index
-  end
+  	def index
+  	end
 
-  # def upload
-  # 	uploaded_file = params[:uploaded_file]
-  # 	File.open(Rails.root.join('public', 'uploads', uploaded_file.original_filename), 'wb') do |file|
-  #   # file.write(uploaded_file.read)
-  # end
-  # end
+ 	def download
+		send_file "#{Rails.root}/app/assets/files/duplicates.csv"
+		# redirect_to '/'
+	end
 end

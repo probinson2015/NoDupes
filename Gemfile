@@ -26,9 +26,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 #twitter bootstrap
 gem 'bootstrap-sass'
 
-#Use spreadsheet for parsing uploaded documents
-gem 'spreadsheet'
-
 gem 'execjs'
 gem 'therubyracer'
 

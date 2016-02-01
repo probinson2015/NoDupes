@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'no_dupes/index'
+  get 'no_dupes/download' => 'no_dupes#download'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

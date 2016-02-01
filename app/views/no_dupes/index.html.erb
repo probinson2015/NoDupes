@@ -1,7 +1,7 @@
 <div class="col-md-8">
 	<div class="jumbotron">
 	  <h1>Hello!</h1>
-	  <p>This site demonstrates a function that removes all duplicates from an unsorted list while leaving the remaining list in the original order. It should be able to handle say, 100,000 list items containing 50% randomly placed duplicates in well under 1 second on a typical modern laptop. This site only accepts .csv files at this time.</p>
+	  <p>This site demonstrates a function that removes all duplicates from an unsorted list while leaving the remaining list in the original order. It should be able to handle say, 100,000 list items containing 50% randomly placed duplicates in well under 1 second on a typical modern laptop. This site only accepts .csv files at this time. You can download a sample .csv file <a href="no_dupes/download">here!</a></p>
 	  
 	  	<input id="input" type="file" accept=".csv">
 	  	<button class="btn btn-default" id="run_button">Run</button>
@@ -65,9 +65,9 @@
 				  	//check to see if the item is in the list
 				    if (!no_dupes[arr[i]])
 				    {
-				      	//add item list if it's not there and set value to true
+				      	//add item to list and set value to true
 				        no_dupes[arr[i]] = true;
-				        //add item to end of working list
+				        //add item to end of original array
 				        arr.push(arr[i]);
 				    }
 				    else
